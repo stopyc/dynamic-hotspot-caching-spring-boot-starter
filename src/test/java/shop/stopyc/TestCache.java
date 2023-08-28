@@ -18,7 +18,7 @@ import java.util.Random;
  * @author: stop.yc
  * @create: 2023-08-27 17:00
  **/
-@SpringBootTest
+@SpringBootTest(classes = DynamicHotCacheApplication.class)
 public class TestCache {
 
     @Resource
@@ -191,12 +191,13 @@ public class TestCache {
 
     @Test
     void test19() {
-
-        for (int i = 0; i < 50; i++) {
-            dynamicHotCache.access(String.valueOf(i + 1), i + 1);
+        Random r = new Random();
+        for (int i = 0; i < 5000; i++) {
+            int i1 = r.nextInt(50);
+            dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
         }
         try {
-            Thread.sleep(2000L);
+            Thread.sleep(1000L);
         } catch (InterruptedException ignored) {
         }
     }

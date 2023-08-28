@@ -2,13 +2,15 @@ package shop.stopyc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author YC104
  */
 @SpringBootApplication
-public class Main {
+@EnableScheduling
+public class DynamicHotCacheApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(DynamicHotCacheApplication.class, args);
     }
 }

@@ -53,6 +53,11 @@ public class DynamicHotCacheProperties {
     private Integer hotCacheNums = 20;
 
     /**
+     * 定时检查更新缓存池的时间间隔
+     */
+    private Long regularlyUpdateCacheInterval = 500L;
+
+    /**
      * 策略类型
      */
     private String strategyType = SortAlgorithmType.LRU.getType();
