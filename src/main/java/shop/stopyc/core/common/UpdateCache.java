@@ -28,6 +28,7 @@ public class UpdateCache {
     }
 
     private void slowUpdate() {
+        log.info("尝试执行慢速更新热点缓存池");
         long now = System.currentTimeMillis();
         if (now - lastSlowUpdateTime < properties.getSlowSamplesTime()) {
             log.info("距离上次慢速更新时间不足 {} ms，不进行更新", properties.getSlowSamplesTime());
@@ -46,6 +47,7 @@ public class UpdateCache {
     }
 
     private void fastUpdate() {
+        log.info("尝试执行快速更新热点缓存池");
         long now = System.currentTimeMillis();
         if (now - lastFastUpdateTime < properties.getFastSamplesTime()) {
             log.info("距离上次快速更新时间不足 {} ms，不进行更新", properties.getFastSamplesTime());

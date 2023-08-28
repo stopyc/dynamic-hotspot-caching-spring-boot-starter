@@ -1,5 +1,6 @@
 package shop.stopyc.core.support.sort;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import shop.stopyc.core.common.AbstractSortAlgorithm;
 import shop.stopyc.core.type.SortAlgorithmType;
@@ -14,6 +15,7 @@ import java.util.Objects;
  * @create: 2023-08-27 16:51
  **/
 @Component
+@Slf4j
 public class Lru extends AbstractSortAlgorithm {
 
     @Override
@@ -29,6 +31,7 @@ public class Lru extends AbstractSortAlgorithm {
             dynamicHotCacheObj.setLastAccessTime(System.currentTimeMillis());
             dynamicHotCacheObj.setSort(System.currentTimeMillis());
         }
+        log.info("执行lru算法，更新对象最后状态为：{}", dynamicHotCacheObj);
         redisUtil.mSet(properties.getAllKeyPoolPrefix(), hashKey, dynamicHotCacheObj);
     }
 

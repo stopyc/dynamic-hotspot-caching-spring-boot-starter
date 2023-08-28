@@ -92,7 +92,7 @@ public class TestCache {
 
     @Test
     void test9() {
-        dynamicHotCache.get();
+        //dynamicHotCache.get();
     }
 
     @Test
@@ -169,7 +169,7 @@ public class TestCache {
 
     @Test
     void test11() {
-        dynamicHotCache.tryUpdateHotCachePool(5);
+        //dynamicHotCache.tryUpdateHotCachePool(5);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class TestCache {
     @Test
     void test17() {
         for (int i = 0; i < 10; i++) {
-            dynamicHotCache.tryUpdateHotCachePool(5);
+            //dynamicHotCache.tryUpdateHotCachePool(5);
         }
     }
 

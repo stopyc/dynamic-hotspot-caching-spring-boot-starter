@@ -50,7 +50,7 @@ public abstract class AbstractSortAlgorithm {
      * @param key：配置的缓存对象池
      * @param data:        缓存对象的标识
      */
-    public abstract void access(String key, Object data);
+    protected abstract void access(String key, Object data);
 
     public void objAccess(String key, Object data) {
         access(key, data);
@@ -74,7 +74,11 @@ public abstract class AbstractSortAlgorithm {
 
 
     protected List<DynamicHotCacheObj> getSortedHotObj(Map<String, DynamicHotCacheObj> sampleMaps) {
-        return sampleMaps.values().stream().sorted(((o1, o2) -> Long.compare(o2.getSort(), o1.getSort()))).collect(Collectors.toList());
+        return sampleMaps
+                .values()
+                .stream()
+                .sorted(((o1, o2) -> Long.compare(o2.getSort(), o1.getSort())))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -86,6 +90,12 @@ public abstract class AbstractSortAlgorithm {
         return redisUtil.zGet(properties.getCachePoolPrefix());
     }
 
+    /**
+     * 尝试更新热点缓存池
+     *
+     * @param sampleNums：抽样数量
+     * @return： 热点缓存池修改的个数
+     */
     public int tryUpdateHotCachePool(long sampleNums) {
         // 1.对所有数据进行抽样
         List<DynamicHotCacheObj> sampleList = sampling(sampleNums);
@@ -153,7 +163,7 @@ public abstract class AbstractSortAlgorithm {
             if (oldHotCacheObj == null) {
                 return;
             }
-            // TODO: 1.1更新热点值
+            // 1.1 更新热点值（lfu的热点值会随时间衰减）
             DynamicHotCacheObj newHotCacheObj = updateHotCacheObj(oldHotCacheObj);
             // 1.2 放入去重map
             distinctMap.put(newHotCacheObj.getData(), newHotCacheObj);

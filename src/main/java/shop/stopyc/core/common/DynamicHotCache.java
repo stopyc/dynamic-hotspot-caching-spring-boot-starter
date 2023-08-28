@@ -1,14 +1,8 @@
 package shop.stopyc.core.common;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import shop.stopyc.entry.DynamicHotCacheObj;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @program: dynamic-hotspot-caching-spring-boot-starter
@@ -30,18 +24,10 @@ public class DynamicHotCache {
      */
     @Async
     public void access(String hashKey, Object data) {
-        abstractSortAlgorithm.access(hashKey, data);
+        abstractSortAlgorithm.objAccess(hashKey, data);
     }
 
-    public List<DynamicHotCacheObj> getSortedHotObj(Map<String, DynamicHotCacheObj> sampleMaps) {
-        return abstractSortAlgorithm.getSortedHotObj(sampleMaps);
-    }
-
-    public void get() {
-        Set<ZSetOperations.TypedTuple<String>> hotCachePool = abstractSortAlgorithm.getHotCachePool();
-    }
-
-    public int tryUpdateHotCachePool(long sampleNums) {
+    protected int tryUpdateHotCachePool(long sampleNums) {
         return abstractSortAlgorithm.tryUpdateHotCachePool(sampleNums);
     }
 }
