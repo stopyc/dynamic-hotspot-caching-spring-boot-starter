@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import shop.stopyc.entry.EventContent;
+import shop.stopyc.entry.event.ActiveUpdateCacheEvent;
 import shop.stopyc.entry.event.ObjAccessEvent;
 
 import javax.annotation.Resource;
@@ -22,5 +23,9 @@ public class PublisherUtil {
 
     public void objAccess(Object source, EventContent eventContent) {
         eventPublisher.publishEvent(new ObjAccessEvent(source, eventContent));
+    }
+
+    public void checkUpdateCache(Object source) {
+        eventPublisher.publishEvent(new ActiveUpdateCacheEvent(source));
     }
 }

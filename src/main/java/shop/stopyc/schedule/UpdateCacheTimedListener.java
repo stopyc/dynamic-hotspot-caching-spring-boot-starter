@@ -6,7 +6,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Component;
 import shop.stopyc.config.DynamicHotCacheProperties;
-import shop.stopyc.core.common.UpdateCache;
+import shop.stopyc.util.PublisherUtil;
 
 import javax.annotation.Resource;
 
@@ -21,12 +21,12 @@ public class UpdateCacheTimedListener implements SchedulingConfigurer {
     private DynamicHotCacheProperties properties;
 
     @Resource
-    private UpdateCache updateCache;
+    private PublisherUtil publisherUtil;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.addTriggerTask(() -> {
-            updateCache.updateCache();
+            publisherUtil.checkUpdateCache(this);
         }, triggerContext -> {
             PeriodicTrigger periodicTrigger = new PeriodicTrigger(properties.getRegularlyUpdateCacheInterval());
             return periodicTrigger.nextExecutionTime(triggerContext);

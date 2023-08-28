@@ -24,4 +24,5 @@ dynamic:
       slowSamplesTime: 3000
       hotCacheNums: 10
       strategy-type: lru
+      regularlyUpdateCacheInterval: 500
       enable: true

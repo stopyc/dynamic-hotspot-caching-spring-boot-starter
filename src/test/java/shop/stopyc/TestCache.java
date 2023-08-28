@@ -190,7 +190,7 @@ public class TestCache {
     }
 
     @Test
-    void test19() {
+    void test19() throws InterruptedException {
         Random r = new Random();
         for (int i = 0; i < 5000; i++) {
             int i1 = r.nextInt(50);
@@ -200,6 +200,8 @@ public class TestCache {
             Thread.sleep(1000L);
         } catch (InterruptedException ignored) {
         }
+
+        Thread.sleep(10000L);
     }
 
     @Test

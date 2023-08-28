@@ -35,7 +35,7 @@ public abstract class AbstractSortAlgorithm {
     protected DynamicHotCacheProperties properties;
 
     private static Set<Object> distinctHotCache;
-    private static int diffCnt;
+    private static Set<Object> diffHotCacheNeedToPreheat;
     @Resource
     private PublisherUtil publisherUtil;
 
@@ -99,7 +99,7 @@ public abstract class AbstractSortAlgorithm {
      * @param sampleNums：抽样数量
      * @return： 热点缓存池修改的个数
      */
-    public int tryUpdateHotCachePool(long sampleNums) {
+    public Set<Object> tryUpdateHotCachePool(long sampleNums) {
         // 1.对所有数据进行抽样
         List<DynamicHotCacheObj> sampleList = sampling(sampleNums);
         // 2.获取旧的热点缓存池
@@ -118,7 +118,7 @@ public abstract class AbstractSortAlgorithm {
         }
         redisUtil.del(properties.getCachePoolPrefix());
         redisUtil.zSet(properties.getCachePoolPrefix(), newHotCachePool);
-        return diffCnt;
+        return diffHotCacheNeedToPreheat;
     }
 
     private void poolCapacityFull(List<DynamicHotCacheObj> sampleList, Set<ZSetOperations.TypedTuple<String>> hotCachePool, Set<ZSetOperations.TypedTuple<String>> newHotCachePool) {
@@ -130,12 +130,12 @@ public abstract class AbstractSortAlgorithm {
 
         list.sort(Comparator.comparingLong(DynamicHotCacheObj::getSort));
 
-        diffCnt = 0;
+        diffHotCacheNeedToPreheat = new HashSet<>();
         // 3. 插入完成之后，只保存配置中的最大热点缓存数量
         for (int i = list.size() - 1; i >= Math.abs(list.size() - properties.getHotCacheNums()); --i) {
             if (!distinctHotCache.contains(list.get(i).getData())) {
                 // 统计缓存热点池修改的个数
-                ++diffCnt;
+                diffHotCacheNeedToPreheat.add(list.get(i).getData());
             }
             newHotCachePool.add(getTuple(list.get(i)));
         }
@@ -145,12 +145,12 @@ public abstract class AbstractSortAlgorithm {
         log.info("热点缓存池未满，直接添加");
         // 1. 获取id去重列表
         Map<Object, DynamicHotCacheObj> distinctMap = getDistinctCacheMap(sampleList, hotCachePool);
-        diffCnt = 0;
         // 2. 添加到缓存池中
+        diffHotCacheNeedToPreheat = new HashSet<>();
         distinctMap.values().forEach((e) -> {
             if (!distinctHotCache.contains(e.getData())) {
                 // 统计缓存热点池修改的个数
-                ++diffCnt;
+                diffHotCacheNeedToPreheat.add(e.getData());
             }
             newHotCachePool.add(getTuple(e));
         });

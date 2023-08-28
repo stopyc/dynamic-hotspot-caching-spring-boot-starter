@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 /**
  * @program: dynamic-hotspot-caching-spring-boot-starter
  * @description: 动态热点缓存排序算法
@@ -27,7 +29,7 @@ public class DynamicHotCache {
         abstractSortAlgorithm.objAccess(hashKey, data);
     }
 
-    protected int tryUpdateHotCachePool(long sampleNums) {
+    protected Set<Object> tryUpdateHotCachePool(long sampleNums) {
         return abstractSortAlgorithm.tryUpdateHotCachePool(sampleNums);
     }
 }
