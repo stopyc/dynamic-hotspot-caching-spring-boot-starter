@@ -19,6 +19,7 @@ import java.util.Set;
 @Component
 @AllArgsConstructor
 public class DynamicHotCache {
+
     private AbstractSortAlgorithm abstractSortAlgorithm;
 
     /**
@@ -40,7 +41,7 @@ public class DynamicHotCache {
         Set<ZSetOperations.TypedTuple<String>> hotCachePool = abstractSortAlgorithm.getHotCachePool();
     }
 
-    public void tryUpdateHotCachePool() {
-        abstractSortAlgorithm.tryUpdateHotCachePool();
+    public int tryUpdateHotCachePool(long sampleNums) {
+        return abstractSortAlgorithm.tryUpdateHotCachePool(sampleNums);
     }
 }

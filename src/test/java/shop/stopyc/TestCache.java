@@ -3,6 +3,7 @@ package shop.stopyc;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import shop.stopyc.core.common.DynamicHotCache;
+import shop.stopyc.core.common.UpdateCache;
 import shop.stopyc.entry.DynamicHotCacheObj;
 import shop.stopyc.util.RedisUtil;
 
@@ -109,10 +110,8 @@ public class TestCache {
         }
     }
 
-    @Test
-    void test11() {
-        dynamicHotCache.tryUpdateHotCachePool();
-    }
+    @Resource
+    private UpdateCache updateCache;
 
     @Test
     void test12() throws InterruptedException {
@@ -169,10 +168,8 @@ public class TestCache {
     }
 
     @Test
-    void test17() {
-        for (int i = 0; i < 10; i++) {
-            dynamicHotCache.tryUpdateHotCachePool();
-        }
+    void test11() {
+        dynamicHotCache.tryUpdateHotCachePool(5);
     }
 
     @Test
@@ -186,14 +183,33 @@ public class TestCache {
     }
 
     @Test
+    void test17() {
+        for (int i = 0; i < 10; i++) {
+            dynamicHotCache.tryUpdateHotCachePool(5);
+        }
+    }
+
+    @Test
     void test19() {
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             dynamicHotCache.access(String.valueOf(i + 1), i + 1);
         }
         try {
             Thread.sleep(2000L);
         } catch (InterruptedException ignored) {
+        }
+    }
+
+    @Test
+    void test20() {
+        updateCache.updateCache();
+    }
+
+    @Test
+    void test21() {
+        for (int i = 0; i < 5; i++) {
+            updateCache.updateCache();
         }
     }
 }

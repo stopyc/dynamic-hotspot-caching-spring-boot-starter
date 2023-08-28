@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "dynamic.hot.cache.fastSamplesNums",
+      "type": "java.lang.String",
+      "description": "Description for dynamic.hot.cache.fastSamplesNums."
+    }
+  ]
+}

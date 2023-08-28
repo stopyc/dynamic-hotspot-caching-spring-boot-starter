@@ -28,9 +28,24 @@ public class DynamicHotCacheProperties {
     private String allKeyPoolPrefix = "allkeypool";
 
     /**
-     * 抽样个数
+     * Slow抽样个数
      */
-    private Integer samplesNums = 5;
+    private Integer slowSamplesNums = 20;
+
+    /**
+     * Fast抽样个数
+     */
+    private Integer fastSamplesNums = 5;
+
+    /**
+     * Fast抽样最大耗时
+     */
+    private Long fastSamplesTime = 1000L;
+
+    /**
+     * Slow抽样最大耗时
+     */
+    private Long slowSamplesTime = 3000L;
 
     /**
      * 热点对象的个数

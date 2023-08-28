@@ -1,4 +1,4 @@
-package shop.stopyc.core.support;
+package shop.stopyc.core.support.sort;
 
 import org.springframework.stereotype.Component;
 import shop.stopyc.core.common.AbstractSortAlgorithm;

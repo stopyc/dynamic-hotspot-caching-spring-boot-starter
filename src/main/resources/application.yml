@@ -18,7 +18,10 @@ dynamic:
     cache:
       cachePoolPrefix: cachepool
       allKeyPoolPrefix: allkeypool
-      samplesNums: 5
+      fastSamplesNums: 5
+      fastSamplesTime: 1000
+      slowSamplesNums: 10
+      slowSamplesTime: 3000
       hotCacheNums: 10
       strategy-type: lru
       enable: true
