@@ -53,6 +53,9 @@ public abstract class AbstractSortAlgorithm {
     protected abstract void access(String key, Object data);
 
     public void objAccess(String key, Object data) {
+        if (!properties.isEnable()) {
+            return;
+        }
         access(key, data);
         publisherUtil.objAccess(this, new EventContent(key, data));
     }

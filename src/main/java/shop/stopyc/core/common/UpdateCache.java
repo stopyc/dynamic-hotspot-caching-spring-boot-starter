@@ -23,6 +23,9 @@ public class UpdateCache {
     private DynamicHotCacheProperties properties;
 
     public void updateCache() {
+        if (!properties.isEnable()) {
+            return;
+        }
         fastUpdate();
         slowUpdate();
     }
