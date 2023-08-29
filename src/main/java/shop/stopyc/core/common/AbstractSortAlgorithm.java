@@ -118,8 +118,9 @@ public abstract class AbstractSortAlgorithm {
             // 4.3 已满，需要替换旧的热点缓存
             poolCapacityFull(sampleList, hotCachePool, newHotCachePool);
         }
-        redisUtil.del(properties.getCachePoolPrefix());
-        redisUtil.zSet(properties.getCachePoolPrefix(), newHotCachePool);
+        //redisUtil.del(properties.getCachePoolPrefix());
+        //redisUtil.zSet(properties.getCachePoolPrefix(), newHotCachePool);
+        redisUtil.delAndSet(properties.getCachePoolPrefix(), newHotCachePool);
         return diffHotCacheNeedToPreheat;
     }
 

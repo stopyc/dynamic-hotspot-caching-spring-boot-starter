@@ -3,6 +3,8 @@ package shop.stopyc.util;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import shop.stopyc.entry.DynamicHotCacheObj;
@@ -22,6 +24,29 @@ public class RedisUtil {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    private static final String LUA_DEL_AND_SET = "for i, key in ipairs(KEYS) do \n" +
+            "    redis.call('DEL', key) \n" +
+            "end \n" +
+            "local zsetKey = ARGV[1] \n" +
+            "for i = 2, #ARGV, 2 do \n" +
+            "    local member = ARGV[i] \n" +
+            "    local score = ARGV[i + 1] \n" +
+            "    redis.call('ZADD', zsetKey, score, member) \n" +
+            "end \n" +
+            "return redis.status_reply('OK')";
+
+
+    public void delAndSet(String key, Set<ZSetOperations.TypedTuple<String>> tuples) {
+        RedisScript<Object> redisScript = new DefaultRedisScript<>(LUA_DEL_AND_SET, Object.class);
+        List<String> args = new ArrayList<>();
+        args.add(key);
+        for (ZSetOperations.TypedTuple<String> member : tuples) {
+            args.add(member.getValue());
+            args.add(String.valueOf(member.getScore()));
+        }
+        Object execute = stringRedisTemplate.execute(redisScript, Collections.singletonList(key), args.toArray(new String[0]));
+    }
 
     public void set(String key, String... value) {
         if (Objects.isNull(value) || value.length == 0) {

@@ -3,6 +3,8 @@ package shop.stopyc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.DefaultTypedTuple;
+import org.springframework.data.redis.core.ZSetOperations;
 import shop.stopyc.core.common.DynamicHotCache;
 import shop.stopyc.core.common.UpdateCache;
 import shop.stopyc.entry.DynamicHotCacheObj;
@@ -192,13 +194,15 @@ public class TestCache {
     @Test
     void test19() throws InterruptedException {
         Random r = new Random();
-        for (int i = 0; i < 1; i++) {
-            int i1 = r.nextInt(50);
+        for (int i = 0; i < 5000; i++) {
+            if (i % 200 == 0) {
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException ignored) {
+                }
+            }
+            int i1 = r.nextInt(20);
             dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
-        }
-        try {
-            Thread.sleep(500L);
-        } catch (InterruptedException ignored) {
         }
 
         Thread.sleep(10000L);
@@ -225,7 +229,49 @@ public class TestCache {
         set2.add(11);
         log.info("set2 为: {}", set2);
         set1.addAll(set2);
+    }
 
+
+    @Test
+    void test23() {
+        Set<ZSetOperations.TypedTuple<String>> members = new HashSet<>();
+        members.add(new DefaultTypedTuple<>("member1", 1.0));
+        members.add(new DefaultTypedTuple<>("member2", 2.0));
+        redisUtil.delAndSet("cachepool", members);
+    }
+
+
+    @Test
+    void test24() throws InterruptedException {
+        Random r = new Random();
+        for (int i = 0; i < 5000; i++) {
+            int i1 = r.nextInt(20);
+            dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
+            Thread.sleep(500L);
+            try {
+                Thread.sleep(500L);
+            } catch (InterruptedException ignored) {
+            }
+        }
+        Thread.sleep(10000L);
+    }
+
+    @Test
+    void test25() throws InterruptedException {
+        Random r = new Random();
+        for (int i = 0; i < 5000; i++) {
+            if (i % 200 == 0) {
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException ignored) {
+                }
+            }
+            int i1 = r.nextInt(20);
+            dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
+            dynamicHotCache.access(String.valueOf(80), 80);
+        }
+
+        Thread.sleep(10000L);
     }
 }
 
