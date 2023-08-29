@@ -1,5 +1,6 @@
 package shop.stopyc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import shop.stopyc.core.common.DynamicHotCache;
@@ -8,9 +9,7 @@ import shop.stopyc.entry.DynamicHotCacheObj;
 import shop.stopyc.util.RedisUtil;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @program: dynamic-hotspot-caching-spring-boot-starter
@@ -19,6 +18,7 @@ import java.util.Random;
  * @create: 2023-08-27 17:00
  **/
 @SpringBootTest(classes = DynamicHotCacheApplication.class)
+@Slf4j
 public class TestCache {
 
     @Resource
@@ -197,7 +197,7 @@ public class TestCache {
             dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
         }
         try {
-            Thread.sleep(1000L);
+            Thread.sleep(500L);
         } catch (InterruptedException ignored) {
         }
 
@@ -214,6 +214,18 @@ public class TestCache {
         for (int i = 0; i < 5; i++) {
             updateCache.updateCache();
         }
+    }
+
+
+    @Test
+    void test22() {
+        Set<Object> set1 = new HashSet<>();
+        log.info("set1 为: {}", set1);
+        Set<Object> set2 = new HashSet<>();
+        set2.add(11);
+        log.info("set2 为: {}", set2);
+        set1.addAll(set2);
+
     }
 }
 

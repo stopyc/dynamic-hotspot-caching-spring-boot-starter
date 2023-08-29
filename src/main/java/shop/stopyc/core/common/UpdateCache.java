@@ -8,6 +8,7 @@ import shop.stopyc.config.DynamicHotCacheProperties;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * @program: dynamic-hotspot-caching-spring-boot-starter
@@ -30,9 +31,11 @@ public class UpdateCache {
             return Collections.emptySet();
         }
         Set<Object> needToPreheat = fastUpdate();
+        if (CollectionUtils.isEmpty(needToPreheat)) {
+            needToPreheat = new ConcurrentSkipListSet<>();
+        }
         Set<Object> needToPreheat2 = slowUpdate();
         if (!CollectionUtils.isEmpty(needToPreheat2)) {
-            System.out.println("111111111111111111111111111111111111111111111111111111needToPreheat2 = " + needToPreheat2);
             needToPreheat.addAll(needToPreheat2);
         }
         return needToPreheat;

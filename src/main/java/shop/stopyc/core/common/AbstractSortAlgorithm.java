@@ -15,6 +15,8 @@ import shop.stopyc.util.RedisUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 /**
@@ -130,7 +132,7 @@ public abstract class AbstractSortAlgorithm {
 
         list.sort(Comparator.comparingLong(DynamicHotCacheObj::getSort));
 
-        diffHotCacheNeedToPreheat = new HashSet<>();
+        diffHotCacheNeedToPreheat = new ConcurrentSkipListSet<>();
         // 3. 插入完成之后，只保存配置中的最大热点缓存数量
         for (int i = list.size() - 1; i >= Math.abs(list.size() - properties.getHotCacheNums()); --i) {
             if (!distinctHotCache.contains(list.get(i).getData())) {
@@ -146,7 +148,7 @@ public abstract class AbstractSortAlgorithm {
         // 1. 获取id去重列表
         Map<Object, DynamicHotCacheObj> distinctMap = getDistinctCacheMap(sampleList, hotCachePool);
         // 2. 添加到缓存池中
-        diffHotCacheNeedToPreheat = new HashSet<>();
+        diffHotCacheNeedToPreheat = new ConcurrentSkipListSet<>();
         distinctMap.values().forEach((e) -> {
             if (!distinctHotCache.contains(e.getData())) {
                 // 统计缓存热点池修改的个数
@@ -157,9 +159,9 @@ public abstract class AbstractSortAlgorithm {
     }
 
     private Map<Object, DynamicHotCacheObj> getDistinctCacheMap(List<DynamicHotCacheObj> sampleList, Set<ZSetOperations.TypedTuple<String>> hotCachePool) {
-        Map<Object, DynamicHotCacheObj> distinctMap = new HashMap<>(sampleList.size() + hotCachePool.size());
+        Map<Object, DynamicHotCacheObj> distinctMap = new ConcurrentHashMap<>(sampleList.size() + hotCachePool.size());
 
-        distinctHotCache = new HashSet<>(hotCachePool.size());
+        distinctHotCache = new ConcurrentSkipListSet<>();
         // 1. 旧热点缓存池中的数据，更新后直接添加到新热点缓存池中
         hotCachePool.forEach((e) -> {
             DynamicHotCacheObj oldHotCacheObj = JSONObject.parseObject(e.getValue(), DynamicHotCacheObj.class);
