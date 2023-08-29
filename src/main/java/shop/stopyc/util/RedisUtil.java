@@ -9,7 +9,6 @@ import shop.stopyc.entry.DynamicHotCacheObj;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @program: dynamic-hotspot-caching-spring-boot-starter
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
  * @create: 2023-08-27 17:23
  **/
 @Component
+@SuppressWarnings("all")
 public class RedisUtil {
 
     @Resource
@@ -30,28 +30,24 @@ public class RedisUtil {
         stringRedisTemplate.opsForSet().add(key, value);
     }
 
-
-    public <T> List<T> sGetRandom(String key, long count, Class<T> clazz) {
-        List<String> list = stringRedisTemplate.opsForSet().randomMembers(key, count);
-        if (Objects.isNull(list)) {
-            return Collections.emptyList();
-        }
-        return list.stream()
-                .map(jsonString -> jsonStrToBean(jsonString, clazz))
-                .collect(Collectors.toList());
-    }
-
     public Map<String, DynamicHotCacheObj> mGetRandom(String key, long count) {
+        long size = stringRedisTemplate.opsForHash().size(key);
+        if (size == 0) {
+            return Collections.emptyMap();
+        }
+        Map<Object, Object> map;
+        if (size < 2) {
+            map = stringRedisTemplate.opsForHash().entries(key);
+        } else {
+            map = stringRedisTemplate.opsForHash().randomEntries(key, count);
+        }
 
-        Map<Object, Object> map = stringRedisTemplate.opsForHash().randomEntries(key, count);
         if (Objects.isNull(map)) {
             return Collections.emptyMap();
         }
         Map<String, DynamicHotCacheObj> res = new HashMap<>(map.size());
         Set<Map.Entry<Object, Object>> entries = map.entrySet();
-        entries.forEach((entry) -> {
-            res.put(entry.getKey().toString(), jsonStrToBean(entry.getValue().toString(), DynamicHotCacheObj.class));
-        });
+        entries.forEach((entry) -> res.put(entry.getKey().toString(), jsonStrToBean(entry.getValue().toString(), DynamicHotCacheObj.class)));
         return res;
     }
 
@@ -69,7 +65,7 @@ public class RedisUtil {
         stringRedisTemplate.opsForHash().putAll(key, res);
     }
 
-    public <T> void mSet(String key, Map<String, DynamicHotCacheObj> data) {
+    public void mSet(String key, Map<String, DynamicHotCacheObj> data) {
         if (CollectionUtils.isEmpty(data)) {
             return;
         }

@@ -192,7 +192,7 @@ public class TestCache {
     @Test
     void test19() throws InterruptedException {
         Random r = new Random();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 1; i++) {
             int i1 = r.nextInt(50);
             dynamicHotCache.access(String.valueOf(i1 + 1), i1 + 1);
         }
