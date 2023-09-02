@@ -6,12 +6,6 @@ spring:
     database: 0
   main:
     allow-bean-definition-overriding: true
-#  task:
-#    execution:
-#      pool:
-#        core-size: 4
-#        max-size: 8
-#        queue-capacity: 15
 
 dynamic:
   hot:
