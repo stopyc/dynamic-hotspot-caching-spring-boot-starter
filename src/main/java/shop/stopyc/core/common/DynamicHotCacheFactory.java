@@ -2,8 +2,6 @@ package shop.stopyc.core.common;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import shop.stopyc.config.DynamicHotCacheProperties;
 
@@ -21,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 @Component
 @NoArgsConstructor
-@DependsOn({"mylfu", "lru"})
 public class DynamicHotCacheFactory {
 
     /**
@@ -30,7 +27,6 @@ public class DynamicHotCacheFactory {
     private static final Map<String, AbstractSortAlgorithm> SORT_STRATEGY_MAP = new ConcurrentHashMap<>(5);
     private DynamicHotCacheProperties properties;
 
-    @Autowired
     public DynamicHotCacheFactory(DynamicHotCacheProperties properties) {
         this.properties = properties;
     }

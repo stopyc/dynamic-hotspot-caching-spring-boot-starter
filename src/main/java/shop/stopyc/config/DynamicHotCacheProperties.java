@@ -62,5 +62,5 @@ public class DynamicHotCacheProperties {
      */
     private String strategyType = SortAlgorithmType.LRU.getType();
 
-    private boolean enable;
+    private boolean enable = true;
 }

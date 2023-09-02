@@ -164,18 +164,26 @@ public abstract class AbstractSortAlgorithm {
 
         distinctHotCache = new ConcurrentSkipListSet<>();
         // 1. 旧热点缓存池中的数据，更新后直接添加到新热点缓存池中
-        hotCachePool.forEach((e) -> {
-            DynamicHotCacheObj oldHotCacheObj = JSONObject.parseObject(e.getValue(), DynamicHotCacheObj.class);
+        for (ZSetOperations.TypedTuple<String> e : hotCachePool) {
+            DynamicHotCacheObj oldHotCacheObj = null;
+            try {
+                oldHotCacheObj = JSONObject.parseObject(e.getValue(), DynamicHotCacheObj.class);
+            } catch (Exception ex) {
+                log.error("json解析异常", ex);
+            }
             if (oldHotCacheObj == null) {
-                return;
+                continue;
             }
             // 1.1 更新热点值（lfu的热点值会随时间衰减）
             DynamicHotCacheObj newHotCacheObj = updateHotCacheObj(oldHotCacheObj);
             // 1.2 放入去重map
+            if (newHotCacheObj == null || newHotCacheObj.getData() == null) {
+                continue;
+            }
             distinctMap.put(newHotCacheObj.getData(), newHotCacheObj);
             // 1.3 保存前热点对象信息
             distinctHotCache.add(oldHotCacheObj.getData());
-        });
+        }
         // 2.对样本值进行筛选去重，看看是否需要更新。
         for (DynamicHotCacheObj sample : sampleList) {
             if (distinctMap.containsKey(sample.getData())) {

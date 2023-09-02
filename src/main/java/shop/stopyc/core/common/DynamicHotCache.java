@@ -1,8 +1,9 @@
 package shop.stopyc.core.common;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
@@ -12,8 +13,9 @@ import java.util.Set;
  * @author: stop.yc
  * @create: 2023-08-27 20:43
  **/
-@Component
+//@Component
 @AllArgsConstructor
+@NoArgsConstructor
 public class DynamicHotCache {
 
     private AbstractSortAlgorithm abstractSortAlgorithm;
@@ -26,6 +28,13 @@ public class DynamicHotCache {
      */
     @Async
     public void access(String hashKey, Object data) {
+        if (!StringUtils.hasText(hashKey)) {
+            return;
+        }
+        if (data == null) {
+            return;
+        }
+        data = data.toString();
         abstractSortAlgorithm.objAccess(hashKey, data);
     }
 

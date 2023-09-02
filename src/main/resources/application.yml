@@ -6,12 +6,12 @@ spring:
     database: 0
   main:
     allow-bean-definition-overriding: true
-  task:
-    execution:
-      pool:
-        core-size: 4
-        max-size: 8
-        queue-capacity: 15
+#  task:
+#    execution:
+#      pool:
+#        core-size: 4
+#        max-size: 8
+#        queue-capacity: 15
 
 dynamic:
   hot:
@@ -26,3 +26,9 @@ dynamic:
       strategy-type: lru
       regularlyUpdateCacheInterval: 500
       enable: true
+
+task:
+  pool:
+    coreSize: 8
+    maxSize: 16
+    queueCapacity: 30

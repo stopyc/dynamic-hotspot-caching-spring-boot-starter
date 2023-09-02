@@ -2,7 +2,6 @@ package shop.stopyc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.ZSetOperations;
 import shop.stopyc.core.common.DynamicHotCache;
@@ -19,7 +18,7 @@ import java.util.*;
  * @author: stop.yc
  * @create: 2023-08-27 17:00
  **/
-@SpringBootTest(classes = DynamicHotCacheApplication.class)
+//@SpringBootTest(classes = DynamicHotCacheApplication.class)
 @Slf4j
 public class TestCache {
 
@@ -272,6 +271,13 @@ public class TestCache {
         }
 
         Thread.sleep(10000L);
+    }
+
+
+    @Test
+    void test26() throws InterruptedException {
+        dynamicHotCache.access("8888", "8888");
+        Thread.sleep(5000L);
     }
 }
 
