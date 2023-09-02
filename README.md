@@ -3,8 +3,8 @@
 ## 项目介绍
 
 基于Redis内存策略的动态热点缓存框架，通过策略工厂模式整合LRU、LFU、Random等算法，通过配置文件，实现动态更新key的热力值，并将热点Key池对象写入缓存。
-(![Dynamic-Hot-Cache](https://pic-1316520471.cos.ap-guangzhou.myqcloud.com/202309030104889.png))
-<img src="https://pic-1316520471.cos.ap-guangzhou.myqcloud.com/202309030108556.png" alt="设计模式" style="zoom:50%;" />
+(![Dynamic-Hot-Cache](https://github.com/stopyc/picb/blob/7b64a173da77febd5729567457f0ec7fb984ed1c/Dynamic-Hot-Cache.png?raw=true))
+<img src="https://github.com/stopyc/picb/blob/main/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.png?raw=true" alt="设计模式" style="zoom:50%;" />
 
 ## 快速开始
 
