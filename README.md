@@ -86,3 +86,20 @@ private DynamicHotCache dynamicHotCache;
         dynamicHotCache.access(objId.toString(),objId);
         }
 ```
+
+当热点缓存池有修改的时候，他会调用CachePreHeat接口下的preHeat方法，用户可以自己实现接口，并完成具体的逻辑。
+
+```java
+
+@Service
+@Primary
+@Slf4j
+public class MyCachePreHeatImpl implements CachePreHeat {
+
+    @Override
+    public void preHeat(Set<Object> needToPreHeatSet) {
+        log.info("热点缓存池变更的对象为id 为: {} 需要将其写入缓存中", needToPreHeatSet);
+        // 具体的把各个缓存对象的id，通过数据库查询，然后写入缓存中。
+    }
+}
+```

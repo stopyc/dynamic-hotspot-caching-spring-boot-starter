@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import shop.stopyc.entry.EventContent;
 import shop.stopyc.entry.event.ActiveUpdateCacheEvent;
 import shop.stopyc.entry.event.ObjAccessEvent;
@@ -41,6 +42,9 @@ public class UpdateCacheListener {
     @Async
     public void tryUpdateCache() {
         Set<Object> needToPreHeat = updateCache.updateCache();
+        if (CollectionUtils.isEmpty(needToPreHeat)) {
+            return;
+        }
         cachePreHeat.preHeat(needToPreHeat);
     }
 }

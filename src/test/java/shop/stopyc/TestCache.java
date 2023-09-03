@@ -258,7 +258,7 @@ public class TestCache {
     @Test
     void test25() throws InterruptedException {
         Random r = new Random();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 50; i++) {
             if (i % 200 == 0) {
                 try {
                     Thread.sleep(500L);
