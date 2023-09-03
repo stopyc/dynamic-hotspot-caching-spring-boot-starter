@@ -95,7 +95,6 @@ private DynamicHotCache dynamicHotCache;
 @Primary
 @Slf4j
 public class MyCachePreHeatImpl implements CachePreHeat {
-
     @Override
     public void preHeat(Set<Object> needToPreHeatSet) {
         log.info("热点缓存池变更的对象为id 为: {} 需要将其写入缓存中", needToPreHeatSet);
