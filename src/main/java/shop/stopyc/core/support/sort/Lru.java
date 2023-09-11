@@ -42,7 +42,7 @@ public class Lru extends AbstractSortAlgorithm {
 
     @Override
     protected DynamicHotCacheObj updateHotCacheObj(DynamicHotCacheObj oldHotCache) {
-        //lru不需要更新时间
+        //lru不需要更新排序
         return oldHotCache;
     }
 }

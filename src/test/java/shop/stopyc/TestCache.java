@@ -279,6 +279,68 @@ public class TestCache {
         dynamicHotCache.access("8888", "8888");
         Thread.sleep(5000L);
     }
+
+    Random r = new Random();
+    long lfuLogFactor = 10;
+    long lfuDecayTime = 1000;
+
+    @Test
+    void test27() {
+        //long lastAccessTime = 1693709700178L;
+        //long lastAccessTime = 1693709700178L;
+        //long lastAccessTime = 1693709700178L;
+        //long lastAccessTime = 1693709700178L;
+        long lastAccessTime = 1694409700178L;
+        long lastAccessCount = 20L;
+        // 每隔一分钟，访问次数减1
+        long lfuDecayTime = 60000L;
+        long lfuLogFactor = 10;
+        Random random = new Random();
+        double R = random.nextDouble();
+
+        double P = 1 / ((double) lastAccessCount * lfuLogFactor + 1);
+        System.out.println("R = " + R);
+        System.out.println("P = " + P);
+        if (R < P) {
+            ++lastAccessCount;
+        }
+        long now = System.currentTimeMillis();
+        if (now - lastAccessTime > lfuDecayTime) {
+            --lastAccessCount;
+        }
+
+        System.out.println("lastAccessCount = " + lastAccessCount);
+    }
+
+    private long getNewLogicAccessCount(long oldLogicAccessCount) {
+        double R = r.nextDouble();
+        double P = 1 / ((double) oldLogicAccessCount * lfuLogFactor + 1);
+        return R < P ? oldLogicAccessCount + 1 : oldLogicAccessCount;
+    }
+
+    private long timeDecayLogicAccessCount(long oldLogicAccessCount, long lastAccessTime) {
+        long now = System.currentTimeMillis();
+        return now - lastAccessTime > lfuDecayTime ? oldLogicAccessCount - 1 : oldLogicAccessCount;
+    }
+
+    private long getNewLogicAccessCount(long oldLogicAccessCount, long lastAccessTime) {
+        oldLogicAccessCount = timeDecayLogicAccessCount(oldLogicAccessCount, lastAccessTime);
+        return getNewLogicAccessCount(oldLogicAccessCount);
+    }
+
+    @Test
+    void test28() throws InterruptedException {
+        long lastAccessCount = 20L;
+        long lastAccessTime = System.currentTimeMillis();
+        for (int i = 0; i < 10000; i++) {
+            lastAccessCount = getNewLogicAccessCount(lastAccessCount, lastAccessTime);
+            lastAccessTime = System.currentTimeMillis();
+            if (i % 500 == 0) {
+                Thread.sleep(1001L);
+            }
+            System.out.println("lastAccessCount = " + lastAccessCount);
+        }
+    }
 }
 
 
